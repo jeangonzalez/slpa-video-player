@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var karma = require('karma').server;
-var serve = require('gulp-serve');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
@@ -8,6 +7,8 @@ var path = require('path');
 var plumber = require('gulp-plumber');
 var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
+var webserver = require('gulp-webserver');
+
 
 /**
  * File patterns
@@ -112,11 +113,11 @@ gulp.task('default', function () {
 });
 
 
-gulp.task('serve', serve('serve-prod'));
-gulp.task('serve-prod', serve({
-  root: ['src'],
-  port: 80,
-  middleware: function(req, res) {
-    // custom optional middleware
-  }
-}));
+gulp.task('serve', function() {
+  gulp.src('demo')
+    .pipe(webserver({
+      livereload: true,
+      fallback:   'index.html',
+      open: true
+    }));
+});
