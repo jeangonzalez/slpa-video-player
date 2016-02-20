@@ -1,0 +1,30 @@
+{
+  "generator-angularjs-library": {
+    "props": {
+      "author": {
+        "name": "Jean Gonzalez",
+        "email": "jean.gonzalez@sillpacorp.com"
+      },
+      "libraryName": {
+        "original": "slpa-video-player",
+        "camelized": "slpaVideoPlayer",
+        "dasherized": "slpa-video-player",
+        "slugified": "slpa-video-player",
+        "parts": [
+          "slpa",
+          "video",
+          "player"
+        ]
+      },
+      "includeModuleDirectives": true,
+      "includeModuleFilters": true,
+      "includeModuleServices": true,
+      "includeAngularModuleResource": true,
+      "includeAngularModuleCookies": true,
+      "includeAngularModuleSanitize": true,
+      "librarySrcDirectory": "src/slpa-video-player",
+      "libraryUnitTestDirectory": "test/unit/slpa-video-player",
+      "libraryUnitE2eDirectory": "test/e2e/slpa-video-player"
+    }
+  }
+}
