@@ -11,18 +11,14 @@
       });
 
   // Modules
-  angular.module('slpaVideoPlayer.directives', []);
-  angular.module('slpaVideoPlayer.filters', []);
   angular.module('slpaVideoPlayer.services', []);
   angular.module('slpaVideoPlayer',
       [
+          'ngMaterial',
           'slpaVideoPlayer.config',
           'slpaVideoPlayer.directives',
           'slpaVideoPlayer.filters',
-          'slpaVideoPlayer.services',
-          'ngResource',
-          'ngCookies',
-          'ngSanitize'
+          'slpaVideoPlayer.services'
       ]);
 
 })(angular);

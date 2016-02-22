@@ -43,6 +43,7 @@ gulp.task('build', function() {
     .pipe(plumber())
     .pipe(concat('slpa-video-player.js'))
     .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./demo/libs'))
     .pipe(uglify())
     .pipe(rename('slpa-video-player.min.js'))
     .pipe(gulp.dest('./dist'));
