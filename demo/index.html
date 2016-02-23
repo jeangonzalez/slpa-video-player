@@ -7,33 +7,35 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
   <link rel="stylesheet" href="libs/angular-block-ui.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://npmcdn.com/angular-toastr/dist/angular-toastr.css" />
+
+
 
 
 </head>
-<body ng-app = "demo" ng-controller = "StudentController">
-<md-toolbar>
+<body ng-app = "demo" ng-controller = "demoCtrl" style="background-color: #3E4FB2" >
+<md-toolbar class}="md-accent">
   <div class="md-toolbar-tools">
     <md-button class="md-icon-button" aria-label="Settings">
       <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
     </md-button>
-    <h2>
-      <span>Video Cliper Example</span>
-    </h2>
+    <h1>
+      <span>Video Cliper Example / jgonzalez315</span>
+    </h1>
     <span flex></span>
 
   </div>
 </md-toolbar>
 
+<div style="width:60%;margin: 0 auto; ">
+  <clip videosource="http://grochtdreis.de/fuer-jsfiddle/video/sintel_trailer-480.mp4"></clip>
 
-  <clip videosource="videoSource2"></clip>
+</div>
 
 
-<style>
-  video {
-    width: 100%    !important;
-    height: auto   !important;
-  }
-</style>
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 <script src="libs/angular-block-ui.js"></script>
@@ -43,6 +45,8 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+<script src="https://npmcdn.com/angular-toastr/dist/angular-toastr.tpls.js"></script>
+
 
 <script src = "libs/slpa-video-player.js"></script>
 <script src = "demo.js"></script>

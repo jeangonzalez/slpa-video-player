@@ -6,5 +6,11 @@ angular.module('slpaVideoPlayer.filters',[])
     return function(seconds) {
       return $filter('date')(new Date(0, 0, 0).setSeconds(seconds), 'HH:mm:ss');
     };
-  });
+  })
+  .filter('trustUrl', ['$sce', function ($sce) {
+    return function (recordingUrl) {
+      return $sce.trustAsResourceUrl(recordingUrl);
+    };
+  }]);
+
 
