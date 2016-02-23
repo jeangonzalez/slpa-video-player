@@ -5,7 +5,7 @@ __Angular directive to make clips from a video.__
 
 ## Demo & Examples
 
-Live demo: [Demo](http://zerocooljs.github.io/react-zjs-video-component/)
+Live demo: [Demo](http://jeangonzalez.github.io/slpa-video-player/)
 
 
 
