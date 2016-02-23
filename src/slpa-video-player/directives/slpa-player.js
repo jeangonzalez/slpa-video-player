@@ -34,7 +34,7 @@ angular.module('slpaVideoPlayer.directives', [])
     '<h3>{{ item.name }}</h3><p>Start ({{ item.startTime|secondsToHHmmss }}) -  End ({{item.endTime|secondsToHHmmss}})'+
     '</p><md-button class="md-secondary md-accent md-raised" ng-show="$index!=0" ng-click="deleteClip($index)">'+
     'Delete</md-button></div></md-list-item><md-divider ></md-divider></md-list></md-content></div></div></md-card>',
-    controller: function($scope, $element,$timeout,blockUI,$localStorage){
+    controller: function($scope, $element,$timeout,blockUI,$localStorage,hotkeys){
       $scope.videosourceOrigin=$scope.videosource;
       function guid() {
         function s4() {
@@ -45,8 +45,6 @@ angular.module('slpaVideoPlayer.directives', [])
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
           s4() + '-' + s4() + s4() + s4();
       }
-
-
       function updateLocalData(item){
         if($scope.$storage.clips.map(function(x) {return x.id; }).indexOf(item.id)!==-1){
           var index=$scope.$storage.clips.indexOf(item);
@@ -65,6 +63,7 @@ angular.module('slpaVideoPlayer.directives', [])
       }
       var myBlock = blockUI.instances.get('myBlock');
       $scope.$storage=$localStorage.$default({clips:[] });
+      $scope.onPlay=0;
       $scope.resetClip=function(){
         $scope.clip={
           id:null,
@@ -78,15 +77,7 @@ angular.module('slpaVideoPlayer.directives', [])
         $scope.new=true;
       };
       $scope.new=true;
-      $scope.clip={
-        id:null,
-        name:null,
-        startTime:null,
-        endTime:null,
-        source:null,
-        playFragment:null,
-        persist:false
-      };
+      $scope.resetClip();
       $scope.clips=[];
       angular.element('#player').bind('loadeddata', function () {
         $scope.videoDuration=angular.element('#player')[0].duration;
@@ -111,6 +102,7 @@ angular.module('slpaVideoPlayer.directives', [])
 
       });
       $scope.clips.push({
+        id:guid(),
         name:'Full Video',
         startTime:0,
         endTime:$scope.videoDuration,
@@ -143,6 +135,7 @@ angular.module('slpaVideoPlayer.directives', [])
       };
       $scope.setSource = function(item,index){
         $scope.videosource=item.playFragment;
+        $scope.onPlay=index;
         if(index!==0){
           $scope.clip=item;
           $scope.new=false;
@@ -151,18 +144,26 @@ angular.module('slpaVideoPlayer.directives', [])
           $scope.resetClip();
         }
       };
-      //
-      //$scope.$watch('clip.endTime',function(){
-      //  if($scope.clip.endTime < $scope.clip.startTime){
-      //    $scope.clip.endTime=$scope.clip.startTime+1;
-      //  }
-      //});
-      //
-      //$scope.$watch('clip.startTime',function(){
-      //  if(($scope.clip.endTime < $scope.clip.startTime)&&$scope.clip.endTime!==null){
-      //    $scope.clip.endTime=$scope.clip.startTime+=1;
-      //  }
-      //});
+
+      hotkeys.add({
+        combo: 'ctrl+up',
+        description: 'Next',
+        callback: function() {
+          if( $scope.onPlay< $scope.clips.length-1){
+            $scope.videosource=$scope.clips[$scope.onPlay+=1].playFragment;
+          }
+        }
+      });
+
+      hotkeys.add({
+        combo: 'ctrl+down',
+        description: 'Preview',
+        callback: function() {
+          if( $scope.onPlay >0){
+            $scope.videosource=$scope.clips[$scope.onPlay-=1].playFragment;
+          }
+        }
+      });
     },
 
   link: function(scope,elem,attrs){

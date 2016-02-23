@@ -16,6 +16,7 @@
           'ngMaterial',
           'blockUI',
           'ngStorage',
+          'cfp.hotkeys',
           'slpaVideoPlayer.config',
           'slpaVideoPlayer.directives',
           'slpaVideoPlayer.filters',
