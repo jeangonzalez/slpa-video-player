@@ -74,15 +74,18 @@ angular.module('slpaVideoPlayer.directives', [])
 
 
       function updateLocalData(item){
-        if($scope.$storage.clips.indexOf(item)!==-1){
+        if($scope.$storage.clips.map(function(x) {return x.id; }).indexOf(item.id)!==-1){
           var index=$scope.$storage.clips.indexOf(item);
           if(item.persist===false){
-            $scope.clips.splice(index, 1);
+            $scope.$storage.clips.splice(index, 1);
           }else{
             $scope.$storage.clips[index]=item;
           }
         }else{
-          $scope.$storage.clips.push(item);
+          if(item.persist!==false){
+            $scope.$storage.clips.push(item);
+
+          }
         }
 
       }
@@ -96,7 +99,7 @@ angular.module('slpaVideoPlayer.directives', [])
           endTime:null,
           source:null,
           playFragment:null,
-          persist:null
+          persist:false
         };
         $scope.new=true;
       };
@@ -108,7 +111,7 @@ angular.module('slpaVideoPlayer.directives', [])
         endTime:null,
         source:null,
         playFragment:null,
-        persist:null
+        persist:false
       };
       $scope.clips=[];
       angular.element('#player').bind('loadeddata', function () {
@@ -118,7 +121,7 @@ angular.module('slpaVideoPlayer.directives', [])
       angular.element('#player').on('pause', function(){
         var current = $scope.clips.indexOf($scope.clip);
 
-        if(current<$scope.clips.length) {
+        if(current<$scope.clips.length-1) {
 
           if (angular.element('#player')[0].currentTime - $scope.clip.endTime > 0.1) {
             myBlock.start('Loading next clip..');
@@ -140,27 +143,26 @@ angular.module('slpaVideoPlayer.directives', [])
         source:$scope.videosourceOrigin,
         playFragment:$scope.videosourceOrigin
       });
+      angular.forEach($scope.$storage.clips, function(item){
+
+        $scope.clips.push(item);
+      });
+
       $scope.saveClip=function(item){
           $scope.clip.source=$scope.videosource;
           $scope.clip.playFragment=$scope.videosourceOrigin+'#t='+$scope.clip.startTime+','+$scope.clip.endTime;
         if($scope.new===true) {
           $scope.clip.id=guid();
           $scope.clips.push($scope.clip);
-          if($scope.clip.persist===true){
-            updateLocalData($scope.clip);
-
-          }
+          updateLocalData($scope.clip);
           $scope.resetClip();
-        }
-        if($scope.clip.persist===true){
+        }else{
           updateLocalData($scope.clip);
         }
-
       };
       $scope.deleteClip=function(index){
-        if($scope.clip.persist===false){
-          updateLocalData($scope.clip);
-        }
+        $scope.clips[index].persist=false;
+        updateLocalData($scope.clips[index]);
         $scope.clips.splice(index, 1);
         $scope.resetClip();
 
