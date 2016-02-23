@@ -36,6 +36,7 @@ __The directive require__
 Angular Material: [Link](https://material.angularjs.org/latest/)
 Angular BlockUi: [Link](http://angular-block-ui.nullest.com/#!/)
 Angular ngStorage: [Link](https://github.com/gsklee/ngStorage)
+yangular-hotkeys: [Link](https://github.com/chieffancypants/angular-hotkeys)
 
 
 
