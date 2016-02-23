@@ -63,7 +63,7 @@ angular.module('slpaVideoPlayer.directives', [])
     '</md-fab-trigger>'+
     '<md-toolbar>'+
     '<md-fab-actions class="md-toolbar-tools">'+
-    '<md-button class="md-accent md-raised" ng-hide="new">Eliminar</md-button>'+
+    '<md-button class="md-accent md-raised" ng-click="deleteClip()" ng-hide="new">Eliminar</md-button>'+
     '<md-button class="md-raised md-accient" ng-click="saveClip()">Guardar</md-button>'+
     '<md-button class="md-raised md-primary" ng-click="resetClip()">Nuevo</md-button>'+
     '</md-fab-actions>'+
@@ -169,7 +169,8 @@ angular.module('slpaVideoPlayer.directives', [])
           updateLocalData($scope.clip);
         }
       };
-      $scope.deleteClip=function(index){
+      $scope.deleteClip=function(){
+        var index=$scope.onPlay;
         $scope.clips[index].persist=false;
         updateLocalData($scope.clips[index]);
         $scope.clips.splice(index, 1);
@@ -220,6 +221,23 @@ angular.module('slpaVideoPlayer.directives', [])
 /**
  * Created by JG on 2/22/2016.
  */
+angular.module('slpaVideoPlayer.filters',[])
+  .filter('secondsToHHmmss', function($filter) {
+    return function(seconds) {
+      return $filter('date')(new Date(0, 0, 0).setSeconds(seconds), 'HH:mm:ss');
+    };
+  })
+  .filter('trustUrl', ['$sce', function ($sce) {
+    return function (recordingUrl) {
+      return $sce.trustAsResourceUrl(recordingUrl);
+    };
+  }]);
+
+
+
+/**
+ * Created by JG on 2/22/2016.
+ */
 angular.module('slpaVideoPlayer.services', [])
   .factory('localData', function($localStorage) {
     //
@@ -241,20 +259,3 @@ angular.module('slpaVideoPlayer.services', [])
     //  }
     //};
   });
-
-/**
- * Created by JG on 2/22/2016.
- */
-angular.module('slpaVideoPlayer.filters',[])
-  .filter('secondsToHHmmss', function($filter) {
-    return function(seconds) {
-      return $filter('date')(new Date(0, 0, 0).setSeconds(seconds), 'HH:mm:ss');
-    };
-  })
-  .filter('trustUrl', ['$sce', function ($sce) {
-    return function (recordingUrl) {
-      return $sce.trustAsResourceUrl(recordingUrl);
-    };
-  }]);
-
-
