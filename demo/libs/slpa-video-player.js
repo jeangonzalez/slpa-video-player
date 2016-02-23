@@ -211,9 +211,7 @@ angular.module('slpaVideoPlayer.directives', [])
     },
 
   link: function(scope,elem,attrs){
-    scope.$watch('color',function(changedVal){
-        console.log('changed detected');
-      });
+
     }
   };
 });
