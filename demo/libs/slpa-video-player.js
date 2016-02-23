@@ -63,7 +63,7 @@ angular.module('slpaVideoPlayer.directives', [])
     '</md-fab-trigger>'+
     '<md-toolbar>'+
     '<md-fab-actions class="md-toolbar-tools">'+
-    '<md-button class="md-accent md-raised" ng-hide="new">Eliminar</md-button>'+
+    '<md-button class="md-accent md-raised" ng-click="deleteClip()" ng-hide="new">Eliminar</md-button>'+
     '<md-button class="md-raised md-accient" ng-click="saveClip()">Guardar</md-button>'+
     '<md-button class="md-raised md-primary" ng-click="resetClip()">Nuevo</md-button>'+
     '</md-fab-actions>'+
@@ -169,7 +169,8 @@ angular.module('slpaVideoPlayer.directives', [])
           updateLocalData($scope.clip);
         }
       };
-      $scope.deleteClip=function(index){
+      $scope.deleteClip=function(){
+        var index=$scope.onPlay;
         $scope.clips[index].persist=false;
         updateLocalData($scope.clips[index]);
         $scope.clips.splice(index, 1);
