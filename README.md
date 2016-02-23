@@ -13,6 +13,10 @@ Live demo: [Demo](http://jeangonzalez.github.io/slpa-video-player/)
 
 ## Installation
 
+```
+
+bower install slpa-video-player
+```
 
 
 
