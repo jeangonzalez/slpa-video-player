@@ -10,13 +10,17 @@ angular.module('slpaVideoPlayer.directives', [])
     },
     restrict: 'AE',
     replace: true,
-    template: ' <md-card><div layout="row"><div flex ="66"><md-card><div class=" card-media">'+
-    '<video id="player" src="{{videosource}}" pause-video loaded-data muted autoplay autobuffer controls></video>'+
-    '</div><md-card-content ng-show="true"><div layout-gt-sm="row"><md-input-container class="md-block" flex-gt-sm>'+
+    template: ' <md-card><div layout="row"><div flex ="66"><md-card><div block-ui="myBlock">'+
+    '<div class=" card-media">'+
+    '<video id="player" src="{{videosource}}" pause-video loaded-data muted autoplay autobuffer controls>' +
+    '</video></div></div>'+
+    '<md-card-content ng-show="true"><div layout-gt-sm="row"><md-input-container class="md-block" flex-gt-sm>'+
     '<label>Clip name</label><input  ng-model="clip.name"></md-input-container>'+
     '<md-input-container class="md-block" flex-gt-sm>'+
     '<label>Start time</label><input type="number" ng-model="clip.startTime"></md-input-container></div>'+
-    '<div layout-gt-sm="row"><md-input-container class="md-block" flex-gt-sm></md-input-container>'+
+    '<div layout-gt-sm="row"><md-input-container class="md-block" flex-gt-sm>'+
+    '<md-switch ng-model="clip.persist">Persist</md-switch>'+
+    '</md-input-container>'+
     '<md-input-container class="md-block" flex-gt-sm>'+
     '<label>End Time</label><input type="number" ng-model="clip.endTime"></md-input-container></div>'+
     '</md-card-content><md-card-actions layout="row" layout-align="end center">'+
@@ -24,32 +28,61 @@ angular.module('slpaVideoPlayer.directives', [])
     '<md-button class="md-raised md-accient" ng-click="saveClip()">Guardar</md-button>'+
     '<md-button class="md-raised md-primary" ng-click="resetClip()">Nuevo</md-button>'+
     '</md-card-actions></md-card></div><div flex="33"><md-content flex  layout-padding><md-list>'+
-    '<md-list-item class="md-3-line secondary-button-padding" ng-repeat="item in clips track by item.name"'+
+    '<md-list-item class="md-3-line secondary-button-padding" ng-repeat="item in clips track by $index"'+
     'ng-click="setSource(item,$index)"><img src="images/poster.jpg" class="md-avatar"/>'+
     '<div class="md-list-item-text" layout="column">'+
     '<h3>{{ item.name }}</h3><p>Start ({{ item.startTime|secondsToHHmmss }}) -  End ({{item.endTime|secondsToHHmmss}})'+
     '</p><md-button class="md-secondary md-accent md-raised" ng-show="$index!=0" ng-click="deleteClip($index)">'+
     'Delete</md-button></div></md-list-item><md-divider ></md-divider></md-list></md-content></div></div></md-card>',
-    controller: function($scope, $element){
+    controller: function($scope, $element,$timeout,blockUI,$localStorage){
       $scope.videosourceOrigin=$scope.videosource;
+      function guid() {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+      }
 
+
+      function updateLocalData(item){
+        if($scope.$storage.clips.indexOf(item)!==-1){
+          var index=$scope.$storage.clips.indexOf(item);
+          if(item.persist===false){
+            $scope.clips.splice(index, 1);
+          }else{
+            $scope.$storage.clips[index]=item;
+          }
+        }else{
+          $scope.$storage.clips.push(item);
+        }
+
+      }
+      var myBlock = blockUI.instances.get('myBlock');
+      $scope.$storage=$localStorage.$default({clips:[] });
       $scope.resetClip=function(){
         $scope.clip={
+          id:null,
           name:null,
           startTime:null,
           endTime:null,
           source:null,
-          playFragment:null
+          playFragment:null,
+          persist:null
         };
         $scope.new=true;
       };
       $scope.new=true;
       $scope.clip={
+        id:null,
         name:null,
         startTime:null,
         endTime:null,
         source:null,
-        playFragment:null
+        playFragment:null,
+        persist:null
       };
       $scope.clips=[];
       angular.element('#player').bind('loadeddata', function () {
@@ -57,7 +90,22 @@ angular.module('slpaVideoPlayer.directives', [])
         $scope.clips[0].endTime=$scope.videoDuration;
       });
       angular.element('#player').on('pause', function(){
-      $scope.a=0;
+        var current = $scope.clips.indexOf($scope.clip);
+
+        if(current<$scope.clips.length) {
+
+          if (angular.element('#player')[0].currentTime - $scope.clip.endTime > 0.1) {
+            myBlock.start('Loading next clip..');
+
+            $timeout(function () {
+              myBlock.stop();
+
+              $scope.videosource = $scope.clips[current + 1].playFragment;
+            }, 3000);
+          }
+        }
+
+
       });
       $scope.clips.push({
         name:'Full Video',
@@ -70,15 +118,27 @@ angular.module('slpaVideoPlayer.directives', [])
           $scope.clip.source=$scope.videosource;
           $scope.clip.playFragment=$scope.videosourceOrigin+'#t='+$scope.clip.startTime+','+$scope.clip.endTime;
         if($scope.new===true) {
+          $scope.clip.id=guid();
           $scope.clips.push($scope.clip);
+          if($scope.clip.persist===true){
+            updateLocalData($scope.clip);
+
+          }
+          $scope.resetClip();
         }
+        if($scope.clip.persist===true){
+          updateLocalData($scope.clip);
+        }
+
       };
       $scope.deleteClip=function(index){
+        if($scope.clip.persist===false){
+          updateLocalData($scope.clip);
+        }
         $scope.clips.splice(index, 1);
         $scope.resetClip();
 
       };
-
       $scope.setSource = function(item,index){
         $scope.videosource=item.playFragment;
         if(index!==0){

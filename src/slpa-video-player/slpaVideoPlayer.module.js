@@ -11,10 +11,11 @@
       });
 
   // Modules
-  angular.module('slpaVideoPlayer.services', []);
   angular.module('slpaVideoPlayer',
       [
           'ngMaterial',
+          'blockUI',
+          'ngStorage',
           'slpaVideoPlayer.config',
           'slpaVideoPlayer.directives',
           'slpaVideoPlayer.filters',
