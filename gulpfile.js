@@ -8,6 +8,8 @@ var plumber = require('gulp-plumber');
 var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
 var webserver = require('gulp-webserver');
+var ghPages = require('gulp-gh-pages');
+
 
 
 /**
@@ -121,4 +123,9 @@ gulp.task('serve', function() {
       fallback:   'index.html',
       open: true
     }));
+});
+
+gulp.task('deploy', function() {
+  return gulp.src('demo/**/*')
+    .pipe(ghPages());
 });
